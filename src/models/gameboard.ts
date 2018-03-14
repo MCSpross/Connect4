@@ -1,3 +1,5 @@
+import { Move } from './move';
+
 export interface Gameboard {
     rows: number;
     columns: number;
@@ -27,6 +29,12 @@ export namespace Helpers {
     export function getIndex(board: Gameboard, row: number, col: number) {
         return (((board.rows - 1) - row) * board.columns) + col;
     }
+
+    export function applyMove(board: Gameboard, row: number, col: number, playerNumber: number) {
+        board.grid[getIndex(board, row, col)] = playerNumber;
+        return board;
+    }
+
 
     export function getRow(board: Gameboard, row: number) {
         let rowValues = [];
@@ -97,15 +105,13 @@ export namespace Helpers {
     }
 
     export function getFirstOpenSlotInColumn(board: Gameboard, col: number) {
-        let index: number = -1;
         let row = 0;
         while (row < board.rows) {
             if (getValue(board, row, col) == 0) {
-                index = getIndex(board, row, col);
                 break;
             }
             row++;
         }
-        return index;
+        return row;
     }
 }

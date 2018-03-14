@@ -15,6 +15,11 @@ var Helpers;
         return (((board.rows - 1) - row) * board.columns) + col;
     }
     Helpers.getIndex = getIndex;
+    function applyMove(board, row, col, playerNumber) {
+        board.grid[getIndex(board, row, col)] = playerNumber;
+        return board;
+    }
+    Helpers.applyMove = applyMove;
     function getRow(board, row) {
         let rowValues = [];
         let col = 0;
@@ -58,16 +63,14 @@ var Helpers;
     }
     Helpers.getDiagonal = getDiagonal;
     function getFirstOpenSlotInColumn(board, col) {
-        let index = -1;
         let row = 0;
         while (row < board.rows) {
             if (getValue(board, row, col) == 0) {
-                index = getIndex(board, row, col);
                 break;
             }
             row++;
         }
-        return index;
+        return row;
     }
     Helpers.getFirstOpenSlotInColumn = getFirstOpenSlotInColumn;
 })(Helpers = exports.Helpers || (exports.Helpers = {}));

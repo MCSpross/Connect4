@@ -52,6 +52,27 @@ describe('gameboard helpers', function() {
         expect(openIndex).to.equal(9);
     })
 
+    it('should correctly apply a move', function() {
+        let targetGrid = [
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            9, 0, 0, 0, 0, 0, 0
+        ]
+        gb.grid = [
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0
+        ]
+        gb = board.Helpers.applyMove(gb, 0, 0, 9);
+        expect(gb.grid).to.deep.equal(targetGrid);
+    })
+
 
     it('should get the values of the specified row', function() {
         gb.grid = [
