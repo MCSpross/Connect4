@@ -1,2 +1,2 @@
 # Connect4
-Rails Connect 4 app
+Node.js Connect 4 app
