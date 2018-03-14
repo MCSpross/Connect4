@@ -65,10 +65,13 @@ var Helpers;
     function getFirstOpenSlotInColumn(board, col) {
         let row = 0;
         while (row < board.rows) {
-            if (getValue(board, row, col) == 0) {
+            if (getValue(board, row, col) === 0) {
                 break;
             }
             row++;
+        }
+        if (row == board.rows) {
+            return -1;
         }
         return row;
     }

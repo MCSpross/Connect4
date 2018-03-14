@@ -22,11 +22,11 @@ export namespace Helpers {
         return { rows: rows, columns: columns, grid: grid }
     }
 
-    export function getValue(board: Gameboard, row: number, col: number) {
+    export function getValue(board: Gameboard, row: number, col: number): number {
         return board.grid[getIndex(board, row, col)];
     }
 
-    export function getIndex(board: Gameboard, row: number, col: number) {
+    export function getIndex(board: Gameboard, row: number, col: number): number {
         return (((board.rows - 1) - row) * board.columns) + col;
     }
 
@@ -107,10 +107,13 @@ export namespace Helpers {
     export function getFirstOpenSlotInColumn(board: Gameboard, col: number) {
         let row = 0;
         while (row < board.rows) {
-            if (getValue(board, row, col) == 0) {
+            if (getValue(board, row, col) === 0) {
                 break;
             }
             row++;
+        }
+        if (row == board.rows) {
+            return -1
         }
         return row;
     }

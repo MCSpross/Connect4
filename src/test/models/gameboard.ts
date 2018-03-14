@@ -39,7 +39,7 @@ describe('gameboard helpers', function() {
         expect(gridValue).to.equal(2);
     })
 
-    it('should return the next open index in a column', function() {
+    it('should return the next open row in a column', function() {
         gb.grid = [
             0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0,
@@ -49,7 +49,7 @@ describe('gameboard helpers', function() {
             0, 0, 1, 0, 0, 0, 0
         ]
         let openIndex: number = board.Helpers.getFirstOpenSlotInColumn(gb, 2);
-        expect(openIndex).to.equal(9);
+        expect(openIndex).to.equal(4);
     })
 
     it('should correctly apply a move', function() {

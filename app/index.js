@@ -4,9 +4,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const template = require("./views/basic-template");
-const board = require("./models/gameboard");
-let gameboard = board.Helpers.create(6, 7);
-gameboard.grid = [
+const matches = require("./models/match");
+const matchController = require("./controllers/match");
+let match = matches.Helpers.create(6, 7);
+match.gameboard.grid = [
     0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0,
@@ -16,12 +17,11 @@ gameboard.grid = [
 ];
 let jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-app.post('/', urlencodedParser, function (req, res) {
-    console.log(req.body);
-    console.log(JSON.stringify(req.body.board));
-    gameboard = JSON.parse(JSON.stringify(req.body.board));
-    gameboard.grid[0] = 1;
-    res.send(template.html(gameboard));
+app.post('/move', jsonParser, function (req, res) {
+    matchController.addMoveToMatch(req, res);
 });
-app.get('/', (req, res) => res.send(template.html(gameboard)));
+app.delete('/move', jsonParser, function (req, res) {
+    matchController.undoLastMove(req, res);
+});
+app.get('/', (req, res) => res.send(template.html(match)));
 app.listen(3000, () => console.log('Example app listening on port 3000!'));

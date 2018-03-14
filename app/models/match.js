@@ -49,7 +49,6 @@ var Helpers;
     }
     Helpers.checkForVictory = checkForVictory;
     function checkArrayForConnect4(array) {
-        console.log(array);
         let last = -1, streak = 1;
         for (let n of array) {
             if (n != 0 && n == last) {

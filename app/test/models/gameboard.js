@@ -33,7 +33,7 @@ describe('gameboard helpers', function () {
         let gridValue = board.Helpers.getValue(gb, 2, 4);
         chai_1.expect(gridValue).to.equal(2);
     });
-    it('should return the next open index in a column', function () {
+    it('should return the next open row in a column', function () {
         gb.grid = [
             0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0,
@@ -43,7 +43,7 @@ describe('gameboard helpers', function () {
             0, 0, 1, 0, 0, 0, 0
         ];
         let openIndex = board.Helpers.getFirstOpenSlotInColumn(gb, 2);
-        chai_1.expect(openIndex).to.equal(9);
+        chai_1.expect(openIndex).to.equal(4);
     });
     it('should correctly apply a move', function () {
         let targetGrid = [

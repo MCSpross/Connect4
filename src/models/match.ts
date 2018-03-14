@@ -58,7 +58,6 @@ export namespace Helpers {
     }
 
     export function checkArrayForConnect4(array: Array<number>) {
-        console.log(array);
         let last = -1, streak = 1;
         for (let n of array) {
             if (n != 0 && n == last) {
