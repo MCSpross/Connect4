@@ -108,6 +108,14 @@ export function html(match: Match) {
       })
     })
 
+    $(".new").click( function(){
+      $.ajax({
+          url: '/match',
+          type: 'GET',
+          contentType: 'application/json',
+          success: Redraw
+      })
+    })
 
     </script>
 

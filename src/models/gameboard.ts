@@ -117,4 +117,12 @@ export namespace Helpers {
         }
         return row;
     }
+
+    export function debugDrawGrid(board: Gameboard) {
+        console.log(`debugDrawGrid rows ${board.rows}  columns ${board.columns}`)
+        for (let i = board.rows - 1; i >= 0; i--) {
+            console.log(JSON.stringify(getRow(board, i)));
+        }
+        console.log("~~~");
+    }
 }

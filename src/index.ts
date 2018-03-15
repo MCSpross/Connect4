@@ -14,14 +14,12 @@ let jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
-app.post('/move', jsonParser, function(req, res) {
-    matchController.addMoveToMatch(req, res);
-});
+app.post('/move', jsonParser, (req, res) => matchController.addMoveToMatch(req, res));
 
-app.delete('/move', jsonParser, function(req, res) {
-    matchController.undoLastMove(req, res);
-});
+app.delete('/move', jsonParser, (req, res) => matchController.undoLastMove(req, res));
 
-app.get('/', (req, res) => matchController.getNewMatch(req, res))
+app.get('/', (req, res) => matchController.renderTemplateAndNewMatch(req, res))
+
+app.get('/match', (req, res) => matchController.getNewMatch(req, res))
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))

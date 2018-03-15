@@ -33,8 +33,8 @@ describe('AI helpers', function() {
             0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0,
-            1, 0, 1, 0, 0, 0, 0,
-            1, 1, 0, 0, 1, 1, 1
+            1, 0, 1, 0, 0, 1, 0,
+            1, 1, 1, 0, 0, 1, 1
         ];
         expect(AI.evaluateBestColumnForMoves(testMatch)).to.equal(3);
     })

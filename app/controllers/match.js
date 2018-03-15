@@ -2,10 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const matchModel = require("./../models/match");
 const template = require("./../views/basic-template");
-function getNewMatch(req, res) {
+function renderTemplateAndNewMatch(req, res) {
     let match = matchModel.Helpers.create(6, 7);
     res.setHeader('Content-Type', 'text/html');
     res.send(template.html(match));
+}
+exports.renderTemplateAndNewMatch = renderTemplateAndNewMatch;
+function getNewMatch(req, res) {
+    let match = matchModel.Helpers.create(6, 7);
+    sendResponse(res, match);
 }
 exports.getNewMatch = getNewMatch;
 function addMoveToMatch(req, res) {

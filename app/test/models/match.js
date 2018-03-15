@@ -98,4 +98,17 @@ describe('match helpers', function () {
         testMatch = match.Helpers.undoLastMove(testMatch);
         chai_1.expect(testMatch.gameboard.grid).to.deep.equal(originalGrid);
     });
+    it('should count longest streak of connected dots', function () {
+        let testMatch = match.Helpers.create(6, 7);
+        testMatch.gameboard.grid = [
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0, 0,
+            0, 1, 0, 0, 0, 0, 0,
+            0, 1, 1, 0, 0, 0, 0
+        ];
+        testMatch = match.Helpers.addMove(testMatch, 0);
+        chai_1.expect(match.Helpers.checkForLongestStreak(testMatch, 1)).to.equal(4);
+    });
 });
