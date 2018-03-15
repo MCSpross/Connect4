@@ -22,6 +22,7 @@ export namespace Helpers {
 
         if (openRowInColumn == -1) {
             console.log("Column is full")
+            boards.Helpers.debugDrawGrid(match.gameboard)
             return match;
         }
         if (match.winningPlayer != -1) {
@@ -81,7 +82,8 @@ export namespace Helpers {
 
     export function checkForLongestStreak(match: Match, playerNumber: number) {
         let lastMove = match.moves[match.moves.length - 1];
-        let longestStreak = checkArrayForConsecutiveDots(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber)
+        let longestStreak = Math.max(1,
+            checkArrayForConsecutiveDots(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber));
         longestStreak = Math.max(longestStreak,
             checkArrayForConsecutiveDots(boards.Helpers.getColumn(match.gameboard, lastMove.column), playerNumber));
         longestStreak = Math.max(longestStreak,

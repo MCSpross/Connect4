@@ -13,6 +13,7 @@ var Helpers;
         let openRowInColumn = boards.Helpers.getFirstOpenSlotInColumn(match.gameboard, column);
         if (openRowInColumn == -1) {
             console.log("Column is full");
+            boards.Helpers.debugDrawGrid(match.gameboard);
             return match;
         }
         if (match.winningPlayer != -1) {
@@ -69,7 +70,7 @@ var Helpers;
     Helpers.checkForVictory = checkForVictory;
     function checkForLongestStreak(match, playerNumber) {
         let lastMove = match.moves[match.moves.length - 1];
-        let longestStreak = checkArrayForConsecutiveDots(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber);
+        let longestStreak = Math.max(1, checkArrayForConsecutiveDots(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber));
         longestStreak = Math.max(longestStreak, checkArrayForConsecutiveDots(boards.Helpers.getColumn(match.gameboard, lastMove.column), playerNumber));
         longestStreak = Math.max(longestStreak, checkArrayForConsecutiveDots(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true), playerNumber));
         longestStreak = Math.max(longestStreak, checkArrayForConsecutiveDots(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false), playerNumber));

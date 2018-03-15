@@ -4,40 +4,64 @@ import * as matches from './match';
 import * as gameboards from './gameboard';
 
 const streakValuesDict = {
-    1: 1,
-    2: 100,
+    0: -100000,
+    1: 0,
+    2: 0,
     3: 500,
     4: 1000,
     5: 1000,
     6: 1000,
-    7: 1000
+    7: 1000,
+    8: 1000
 }
 
-export function evaluateBestColumnForMoves(match: matches.Match) {
+export function makeMove(match: matches.Match) {
+    let bestMove = evaluateMoveScores(match, 1);
+    console.log(`Best Move: column ${bestMove.column}  score ${bestMove.score}`)
+    return matches.Helpers.addMove(match, bestMove.column);
+}
+
+export function evaluateMoveScores(match: matches.Match, searchIterations: number) {
     let streaks = []
     for (let i = 0; i < match.gameboard.columns; i++) {
-        let colStreak = -1;
         let m = JSON.parse(JSON.stringify(match));
-        if (gameboards.Helpers.getFirstOpenSlotInColumn(m.gameboard, i) != -1) {
-            let playeNum = m.activePlayerNumber;
-            m = matches.Helpers.addMove(m, i);
-            colStreak = matches.Helpers.checkForLongestStreak(m, playeNum);
-        }
-        console.log("score: " + streakValuesDict[colStreak]);
-        streaks.push({ column: i, score: streakValuesDict[colStreak] });
+        streaks.push({ column: i, score: getScoreForColumnMove(m, i, m.activePlayerNumber, searchIterations) });
     }
-    streaks = sortArray(streaks, "score");
-    let bestScore = streaks[0].score, bestScoringMoves = [];
-    bestScoringMoves.push(streaks[0].column)
-    for (let i = 1; i < streaks.length; i++) {
-        if (streaks[i].score < bestScore) {
+
+    let bestScoringMoves = getBestScoringMoves(streaks);
+    //if moves have equal score pick randomly from the set
+    return bestScoringMoves[Math.floor(Math.random() * bestScoringMoves.length)];
+}
+
+export function getBestScoringMoves(set: Array<any>) {
+    set = sortArray(set, "score");
+    console.log("getBestScoringMoves " + JSON.stringify(set));
+    let bestScore = set[0].score, bestScoringMoves = [];
+    bestScoringMoves.push(set[0])
+    for (let i = 1; i < set.length; i++) {
+        if (set[i].score < bestScore) {
             break;
         }
-        bestScoringMoves.push(streaks[i].column)
+        bestScoringMoves.push(set[i])
     }
-    //if moves have equal score pick randomly from the set
-    let bestColumnForMove = bestScoringMoves[Math.floor(Math.random() * bestScoringMoves.length)];
-    return bestColumnForMove;
+    return bestScoringMoves;
+}
+
+export function getScoreForColumnMove(match: matches.Match, column: number, playeNumber: number, searchIterations: number) {
+    let colStreak = 0;
+    let interationScore = 0;
+    if (gameboards.Helpers.getFirstOpenSlotInColumn(match.gameboard, column) != -1) {
+        match = matches.Helpers.addMove(match, column);
+        colStreak = matches.Helpers.checkForLongestStreak(match, playeNumber);
+        if (searchIterations > 0) {
+            searchIterations--;
+            let bestMove = evaluateMoveScores(match, searchIterations)
+            console.log("best move search " + bestMove)
+            interationScore = (bestMove.score == 0) ? 0 : bestMove.score * -1;
+            console.log(interationScore);
+        }
+    }
+    return streakValuesDict[colStreak] + interationScore;
 }
 
 export function sortArray(array: Array<any>, sortValue: string) {
