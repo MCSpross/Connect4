@@ -7,12 +7,13 @@ export interface Match {
     gameboard: boards.Gameboard;
     moves: Array<moves.Move>;
     activePlayerNumber: number;
+    winningPlayer: number
 }
 
 export namespace Helpers {
     export function create(rows: number, columns: number): Match {
         let board: boards.Gameboard = boards.Helpers.create(6, 7);
-        return { playerOneId: "p1", playerTwoId: "p2", gameboard: board, moves: [], activePlayerNumber: 1 }
+        return { playerOneId: "p1", playerTwoId: "p2", gameboard: board, moves: [], activePlayerNumber: 1, winningPlayer: -1 }
     }
 
     export function addMove(match: Match, column: number) {
@@ -21,19 +22,32 @@ export namespace Helpers {
             console.log("Column is full")
             return match;
         }
+        if (match.winningPlayer != -1) {
+            console.log("Match is over. No new moves.");
+            return match;
+        }
         match.gameboard = boards.Helpers.applyMove(match.gameboard, openRowInColumn, column, match.activePlayerNumber);
 
         match.moves.push(
             moves.Helpers.create(match.activePlayerNumber, openRowInColumn, column)
         );
+        let potentialVictor = checkForVictory(match);
+        if (potentialVictor != -1) {
+            match.winningPlayer = potentialVictor;
+        }
         match.activePlayerNumber = toggleActivePlayer(match.activePlayerNumber);
         return match;
     }
 
     export function undoLastMove(match: Match) {
+        if (match.moves.length < 1) {
+            console.log("no moves to undo");
+            return match;
+        }
         let lastMove: moves.Move = match.moves.pop();
         match.gameboard = boards.Helpers.applyMove(match.gameboard, lastMove.row, lastMove.column, 0);
         match.activePlayerNumber = toggleActivePlayer(match.activePlayerNumber);
+        match.winningPlayer = -1;
         return match;
     }
 

@@ -20,11 +20,17 @@ export function html(match: Match) {
       margin: 0.1em;
       display: inline-block;
     }
+    .winner {
+      font-size: large;
+      font-weight: bold;
+    }
     </style>
 
-
-    <br><br>
     <h2> Connect 4 </h2>
+    <button class="undo" type="submit">Undo Last Move</button>
+    <button class="new" type="submit" style="display: inline-block;">New Game</button>
+      <br><br>
+    <div class="winner">The Winner is undecided!</div>
     <br>
     `
     for (let i = 0; i < match.gameboard.rows; i++) {
@@ -42,13 +48,16 @@ export function html(match: Match) {
     }
 
     content += `
-    <button class="undo" type="submit">Undo Last Move</button>
+
+
 
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
     <script>
     var match = ${JSON.stringify(match)};
-
+    $( document ).ready(function() {
+      $(".winner").hide();
+    });
     function Redraw(data){
       match = data;
       console.log("Result:"+ JSON.stringify(data));
@@ -61,6 +70,14 @@ export function html(match: Match) {
             color = '#30f'
         }
         $("#"+i).css("background-color", color)
+      }
+
+      if(match.winningPlayer != -1){
+        $(".winner").text("The winner is Player "+match.winningPlayer)
+        $(".winner").show();
+          alert("The winner is Player "+match.winningPlayer);
+      }else{
+        $(".winner").hide();
       }
     }
 

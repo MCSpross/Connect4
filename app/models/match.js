@@ -6,7 +6,7 @@ var Helpers;
 (function (Helpers) {
     function create(rows, columns) {
         let board = boards.Helpers.create(6, 7);
-        return { playerOneId: "p1", playerTwoId: "p2", gameboard: board, moves: [], activePlayerNumber: 1 };
+        return { playerOneId: "p1", playerTwoId: "p2", gameboard: board, moves: [], activePlayerNumber: 1, winningPlayer: -1 };
     }
     Helpers.create = create;
     function addMove(match, column) {
@@ -15,16 +15,29 @@ var Helpers;
             console.log("Column is full");
             return match;
         }
+        if (match.winningPlayer != -1) {
+            console.log("Match is over. No new moves.");
+            return match;
+        }
         match.gameboard = boards.Helpers.applyMove(match.gameboard, openRowInColumn, column, match.activePlayerNumber);
         match.moves.push(moves.Helpers.create(match.activePlayerNumber, openRowInColumn, column));
+        let potentialVictor = checkForVictory(match);
+        if (potentialVictor != -1) {
+            match.winningPlayer = potentialVictor;
+        }
         match.activePlayerNumber = toggleActivePlayer(match.activePlayerNumber);
         return match;
     }
     Helpers.addMove = addMove;
     function undoLastMove(match) {
+        if (match.moves.length < 1) {
+            console.log("no moves to undo");
+            return match;
+        }
         let lastMove = match.moves.pop();
         match.gameboard = boards.Helpers.applyMove(match.gameboard, lastMove.row, lastMove.column, 0);
         match.activePlayerNumber = toggleActivePlayer(match.activePlayerNumber);
+        match.winningPlayer = -1;
         return match;
     }
     Helpers.undoLastMove = undoLastMove;
