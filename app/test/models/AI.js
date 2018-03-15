@@ -33,6 +33,18 @@ describe('AI helpers', function () {
             1, 0, 1, 0, 0, 1, 0,
             1, 1, 1, 0, 0, 1, 1
         ];
-        chai_1.expect(AI.evaluateBestColumnForMoves(testMatch)).to.equal(3);
+        chai_1.expect(AI.evaluateMoveScores(testMatch, 1).column).to.equal(3);
+    });
+    it('should block a potential victory by the other player', function () {
+        let testMatch = match.Helpers.create(6, 7);
+        testMatch.gameboard.grid = [
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            2, 2, 2, 0, 0, 0, 0
+        ];
+        chai_1.expect(AI.evaluateMoveScores(testMatch, 1).column).to.equal(3);
     });
 });

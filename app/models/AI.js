@@ -15,7 +15,6 @@ const streakValuesDict = {
 };
 function makeMove(match) {
     let bestMove = evaluateMoveScores(match, 1);
-    console.log(`Best Move: column ${bestMove.column}  score ${bestMove.score}`);
     return matches.Helpers.addMove(match, bestMove.column);
 }
 exports.makeMove = makeMove;
@@ -31,7 +30,6 @@ function evaluateMoveScores(match, searchIterations) {
 exports.evaluateMoveScores = evaluateMoveScores;
 function getBestScoringMoves(set) {
     set = sortArray(set, "score");
-    console.log("getBestScoringMoves " + JSON.stringify(set));
     let bestScore = set[0].score, bestScoringMoves = [];
     bestScoringMoves.push(set[0]);
     for (let i = 1; i < set.length; i++) {
@@ -52,9 +50,7 @@ function getScoreForColumnMove(match, column, playeNumber, searchIterations) {
         if (searchIterations > 0) {
             searchIterations--;
             let bestMove = evaluateMoveScores(match, searchIterations);
-            console.log("best move search " + bestMove);
             interationScore = (bestMove.score == 0) ? 0 : bestMove.score * -1;
-            console.log(interationScore);
         }
     }
     return streakValuesDict[colStreak] + interationScore;
