@@ -71,14 +71,19 @@ export function html(match: Match) {
         }
         $("#"+i).css("background-color", color)
       }
-
-      if(match.winningPlayer != -1){
-        $(".winner").text("The winner is Player "+match.winningPlayer)
+      var winnerText = "Winner is Undecided"
+      if(match.winningPlayer == 0){
+        winnerText = "Game is a draw"
         $(".winner").show();
-          alert("The winner is Player "+match.winningPlayer);
+        alert(winnerText);
+      }else if(match.winningPlayer != -1){
+        winnerText = "The winner is Player "+match.winningPlayer
+        $(".winner").show();
+        alert(winnerText);
       }else{
         $(".winner").hide();
       }
+      $(".winner").text(winnerText)
     }
 
     $( ".dot" ).click( function(){

@@ -25,6 +25,11 @@ var Helpers;
         if (potentialVictor != -1) {
             match.winningPlayer = potentialVictor;
         }
+        if (match.moves.length >= (match.gameboard.rows * match.gameboard.columns) && match.winningPlayer == -1) {
+            console.log("Game is a tie");
+            match.winningPlayer = 0;
+            return match;
+        }
         match.activePlayerNumber = toggleActivePlayer(match.activePlayerNumber);
         return match;
     }
@@ -50,10 +55,11 @@ var Helpers;
     Helpers.toggleActivePlayer = toggleActivePlayer;
     function checkForVictory(match) {
         let lastMove = match.moves[match.moves.length - 1];
-        if (checkArrayForConnect4(boards.Helpers.getRow(match.gameboard, lastMove.row)) ||
-            checkArrayForConnect4(boards.Helpers.getColumn(match.gameboard, lastMove.column)) ||
-            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true)) ||
-            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false))) {
+        let playerNumber = lastMove.playerNumber;
+        if (checkArrayForConnect4(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber) ||
+            checkArrayForConnect4(boards.Helpers.getColumn(match.gameboard, lastMove.column), playerNumber) ||
+            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true), playerNumber) ||
+            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false), playerNumber)) {
             return lastMove.playerNumber;
         }
         else {
@@ -61,20 +67,36 @@ var Helpers;
         }
     }
     Helpers.checkForVictory = checkForVictory;
-    function checkArrayForConnect4(array) {
-        let last = -1, streak = 1;
+    function checkForLongestStreak(match, playerNumber) {
+        let lastMove = match.moves[match.moves.length - 1];
+        let longestStreak = checkArrayForConsecutiveDots(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber);
+        longestStreak = Math.max(longestStreak, checkArrayForConsecutiveDots(boards.Helpers.getColumn(match.gameboard, lastMove.column), playerNumber));
+        longestStreak = Math.max(longestStreak, checkArrayForConsecutiveDots(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true), playerNumber));
+        longestStreak = Math.max(longestStreak, checkArrayForConsecutiveDots(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false), playerNumber));
+        return longestStreak;
+    }
+    Helpers.checkForLongestStreak = checkForLongestStreak;
+    function checkArrayForConnect4(array, numberToCheck) {
+        if (checkArrayForConsecutiveDots(array, numberToCheck) >= 4) {
+            return true;
+        }
+        return false;
+    }
+    Helpers.checkArrayForConnect4 = checkArrayForConnect4;
+    function checkArrayForConsecutiveDots(array, numberToCheck) {
+        let last = -1, streak = 1, longestStreak = 0;
         for (let n of array) {
-            if (n != 0 && n == last) {
+            if (n == numberToCheck && n == last) {
                 streak++;
-                if (streak >= 4)
-                    return true;
+                if (streak > longestStreak)
+                    longestStreak = streak;
             }
             else {
                 streak = 1;
             }
             last = n;
         }
-        return false;
+        return longestStreak;
     }
-    Helpers.checkArrayForConnect4 = checkArrayForConnect4;
+    Helpers.checkArrayForConsecutiveDots = checkArrayForConsecutiveDots;
 })(Helpers = exports.Helpers || (exports.Helpers = {}));

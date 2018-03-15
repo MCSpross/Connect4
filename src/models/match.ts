@@ -18,6 +18,8 @@ export namespace Helpers {
 
     export function addMove(match: Match, column: number) {
         let openRowInColumn = boards.Helpers.getFirstOpenSlotInColumn(match.gameboard, column)
+
+
         if (openRowInColumn == -1) {
             console.log("Column is full")
             return match;
@@ -34,6 +36,11 @@ export namespace Helpers {
         let potentialVictor = checkForVictory(match);
         if (potentialVictor != -1) {
             match.winningPlayer = potentialVictor;
+        }
+        if (match.moves.length >= (match.gameboard.rows * match.gameboard.columns) && match.winningPlayer == -1) {
+            console.log("Game is a tie");
+            match.winningPlayer = 0;
+            return match;
         }
         match.activePlayerNumber = toggleActivePlayer(match.activePlayerNumber);
         return match;
@@ -60,10 +67,11 @@ export namespace Helpers {
 
     export function checkForVictory(match: Match) {
         let lastMove = match.moves[match.moves.length - 1];
-        if (checkArrayForConnect4(boards.Helpers.getRow(match.gameboard, lastMove.row)) ||
-            checkArrayForConnect4(boards.Helpers.getColumn(match.gameboard, lastMove.column)) ||
-            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true)) ||
-            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false))) {
+        let playerNumber = lastMove.playerNumber;
+        if (checkArrayForConnect4(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber) ||
+            checkArrayForConnect4(boards.Helpers.getColumn(match.gameboard, lastMove.column), playerNumber) ||
+            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true), playerNumber) ||
+            checkArrayForConnect4(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false), playerNumber)) {
 
             return lastMove.playerNumber;
         } else {
@@ -71,18 +79,37 @@ export namespace Helpers {
         }
     }
 
-    export function checkArrayForConnect4(array: Array<number>) {
-        let last = -1, streak = 1;
+    export function checkForLongestStreak(match: Match, playerNumber: number) {
+        let lastMove = match.moves[match.moves.length - 1];
+        let longestStreak = checkArrayForConsecutiveDots(boards.Helpers.getRow(match.gameboard, lastMove.row), playerNumber)
+        longestStreak = Math.max(longestStreak,
+            checkArrayForConsecutiveDots(boards.Helpers.getColumn(match.gameboard, lastMove.column), playerNumber));
+        longestStreak = Math.max(longestStreak,
+            checkArrayForConsecutiveDots(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, true), playerNumber));
+        longestStreak = Math.max(longestStreak,
+            checkArrayForConsecutiveDots(boards.Helpers.getDiagonal(match.gameboard, lastMove.row, lastMove.column, false), playerNumber));
+        return longestStreak;
+    }
+
+    export function checkArrayForConnect4(array: Array<number>, numberToCheck: number) {
+        if (checkArrayForConsecutiveDots(array, numberToCheck) >= 4) {
+            return true;
+        }
+        return false;
+    }
+
+    export function checkArrayForConsecutiveDots(array: Array<number>, numberToCheck: number) {
+        let last = -1, streak = 1, longestStreak = 0;
         for (let n of array) {
-            if (n != 0 && n == last) {
+            if (n == numberToCheck && n == last) {
                 streak++;
-                if (streak >= 4)
-                    return true;
+                if (streak > longestStreak)
+                    longestStreak = streak;
             } else {
                 streak = 1;
             }
             last = n;
         }
-        return false;
+        return longestStreak;
     }
 }
